@@ -81,16 +81,21 @@ def set_output_mode(device, output, mode):
     device.ctrl_transfer(0x40, 10, mode, output, None)
 
 def main(arguments):
-    device = get_device()
-    device_config = device.get_active_configuration()
-    control_device(device, device_config)
+    
 
     output = get_output_index(arguments.output)
     mode = get_mode_id(arguments.mode)
-
+    
+    device = get_device()
+    device_config = device.get_active_configuration()
+    control_device(device, device_config)
+    print("Got control of device")
+     
     set_output_mode(device, output, mode)
+    print("Set", arguments.output, "to", arguments.mode)
 
     release_device(device, device_config)
+    print("Gave up device")
 
 
 if __name__ == "__main__":
