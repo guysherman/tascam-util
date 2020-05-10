@@ -35,6 +35,23 @@ Or download it as a zip file, whatever.
 Note, your distribution might call python3 `python` and pip3 `pip`, in which case you'll need to 
 tweak `setup.sh` to use the correct name. And do the same thing in your mind when reading further in this doc
 
+## Add a udev rule
+If you want to mess with your device from user space, you need to add a udev rule to give you permissions.
+
+Fortunately, I created an example file for you, so you should be able to just:
+
+```
+$> sudo cp ./99-tascam44.rules /lib/udev/rules.d/99-tascam44.rules
+```
+
+Note I assume you have a group called `audio` and that your user is in it.
+
+You'll also need to re-run the udev rules if you don't want to reboot:
+
+```
+$> udevadm control --reload-rules && udevadm trigger
+```
+
 ## Set some settings
 
 I mainly wrote this because I wanted to set Line Outs 3 and 4 to be directly mapped to PC Outs 3 and 4, rather than feeding from the internal mixer.
