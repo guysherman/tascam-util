@@ -4,6 +4,8 @@ import sys
 import os
 import argparse
 
+from route import RouteCommand
+
 VENDOR_ID=0x0644
 PRODUCT_ID = 0x804e
 
@@ -80,19 +82,22 @@ def set_output_mode(device, output, mode):
     device.ctrl_transfer(0xa1, 2, 0x0100, 0x2900, 50)
     device.ctrl_transfer(0x40, 10, mode, output, None)
 
-def main(arguments):
-    
+def get_command(command, args):
+    if command == "route":
+        return RouteCommand(args)
+    else:
+        raise ValueError('Unknown command')
 
-    output = get_output_index(arguments.output)
-    mode = get_mode_id(arguments.mode)
-    
+def main(arguments):
+
+    command = get_command(arguments.command, arguments.args)
+
     device = get_device()
     device_config = device.get_active_configuration()
     control_device(device, device_config)
     print("Got control of device")
      
-    set_output_mode(device, output, mode)
-    print("Set", arguments.output, "to", arguments.mode)
+    command.execute(device)
 
     release_device(device, device_config)
     print("Gave up device")
@@ -100,8 +105,8 @@ def main(arguments):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-o", "--output", type=str, help="The line output device to modify, either LINE12 or LINE34")
-    parser.add_argument("-m", "--mode", type=str, help="The mode to set the output to, MIX, OUT12 or OUT34")
+    parser.add_argument("command", type=str, help="The command to execute")
+    parser.add_argument('args', nargs=argparse.REMAINDER, help="the args to pass to the command")
     args = parser.parse_args()
     main(args)
 
