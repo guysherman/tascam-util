@@ -5,6 +5,7 @@ import os
 import argparse
 
 from route import RouteCommand
+from monitor import MonitorCommand
 
 VENDOR_ID=0x0644
 PRODUCT_ID = 0x804e
@@ -83,8 +84,10 @@ def set_output_mode(device, output, mode):
     device.ctrl_transfer(0x40, 10, mode, output, None)
 
 def get_command(command, args):
-    if command == "route":
+    if command.lower() == "route":
         return RouteCommand(args)
+    elif command.lower() == "monitor":
+        return MonitorCommand(args)
     else:
         raise ValueError('Unknown command')
 
