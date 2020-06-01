@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["monitor", "-i", "IN34", "-m", "mono"]
+            "args": ["input", "-i", "IN4", "-m", "on"]
         }
     ]
 }

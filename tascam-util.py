@@ -6,6 +6,7 @@ import argparse
 
 from route import RouteCommand
 from monitor import MonitorCommand
+from inputs import InputCommand
 
 VENDOR_ID=0x0644
 PRODUCT_ID = 0x804e
@@ -88,8 +89,10 @@ def get_command(command, args):
         return RouteCommand(args)
     elif command.lower() == "monitor":
         return MonitorCommand(args)
+    elif command.lower() == "input":
+        return InputCommand(args)
     else:
-        raise ValueError('Unknown command')
+        raise VaOFFlueError('Unknown command')
 
 def main(arguments):
 
