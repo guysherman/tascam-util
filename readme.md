@@ -54,43 +54,44 @@ $> udevadm control --reload-rules && udevadm trigger
 
 ## Set some settings
 
-I mainly wrote this because I wanted to set Line Outs 3 and 4 to be directly mapped to PC Outs 3 and 4, rather than feeding from the internal mixer.
+`tascam-util` uses a command structure, so you pass it a command name, and the command arguments
 
 Here's the help text:
 
 ```
-usage: tascam-util.py [-h] [-o OUTPUT] [-m MODE]
+usage: tascam-util.py [-h] command ...
+
+positional arguments:
+  command     The command to execute
+  args        the args to pass to the command
 
 optional arguments:
-  -h, --help            show this help message and exit
-  -o OUTPUT, --output OUTPUT
-                        The line output device to modify, either LINE12 or LINE34
-  -m MODE, --mode MODE  The mode to set the output to, MIX, OUT12 or OUT34
+  -h, --help  show this help message and exit
   ```
 
-Essentially, you have two output groups to play with:
-* Line Outs 1-2
-* Line Outs 3-4
+### Commands
 
-They can be set to one of:
-* MIX - All the PC outs, and the physical inputs on the interface are mixed, according to the 'Monitor Balance' knob on the inteface, and then sent out the output group
-* OUT12 - The output group receives a direct feed from PC Outs 1 and 2
-* OUT34 - The output group receives a direct feed from PC Outs 3 and 4
+**route**: set the signal routing options, takes the following arguments:
+* `-s`, `--source`: the audio source (ie one of the stereo pairs from the PC, or the monitor mix); valid values: `MIX`, `OUT12`, `OUT34`
+* `-d`, `--dest`: the audio outputs to route to; valid values: `LINE12`, `LINE34`
 
-**Really Important Note**: Line Outs 3-4 do not have a physical volume control on the interface, so they are really loud! I might eventually reverse engineer Tascam's "Software Mixer" application, rather than just this little bit of their settings panel, in which case I might find a way to control that line out via software.
+**monitor**: set the direct monitoring mode for a given input pair; arguments:
+* `-i`, `--input`: the input pair; values `IN12`, `IN34`
+* `-m`, `--mode`: the monitoring mode; values `MONO`, `STEREO`
 
-I have my setup as follows:
+**input**: enable or disable given device inputs; arguments:
+* `-i`, `--input`: the input to enable/disable; values `IN1`, `IN2`, `IN3`, `IN4`
+* `-m`, `--mode`: enable or disable; values: `ON`, `OFF`
 
-Line Out 1-2 : Monitor Mix
-Line Out 3-4 : PC Out 3-4
+**powersave**: enable or disable powersaving; arguments:
+* `-m`, `--mode`: enabled or disabled; values: `ON`, `OFF`
 
-I have my monitors running from Line Out 3-4, and then I send the master out of my DAW to Channels 3 and 4. Usually I'll send it to Channels 1 and 2, but if I want to send a particular mix to the headphones I can set up a separate bus to go to Channels 1 and 2.
+### Example
 
-So to kick my interface into gear I do the following, from within the root folder of where the code is:
-
-```
-$> python3 tascam-util.py -o LINE12 -m MIX
-$> python3 tascam-util.py -o LINE34 -m OUT34
+To set Line Outputs 3 and 4 to directly reflect outputs 3 and 4 from the computer:
 
 ```
+$> python tascam-util.py route -s OUT34 -d LINE34
+```
+
 
