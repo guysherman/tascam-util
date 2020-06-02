@@ -30,7 +30,7 @@ def get_mode_id(mode_name):
     else:
         raise ValueError('Invalid argument value for --mode')
 
-def set_monitor_mode(device, input, mode):
+def set_input_mode(device, input, mode):
     device.ctrl_transfer(0xa1, 2, 0x0100, 0x2900, 16)
     device.ctrl_transfer(0xa1, 2, 0x0100, 0x2900, 50)
     device.ctrl_transfer(0x40, 6, mode, input, None)
@@ -47,7 +47,7 @@ class InputCommand:
         self.mode = get_mode_id(args.mode)
     
     def execute(self, device):
-        set_monitor_mode(device, self.input, self.mode)
+        set_input_mode(device, self.input, self.mode)
 
 
 
