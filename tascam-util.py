@@ -80,11 +80,6 @@ def get_mode_id(mode_name):
     else:
         raise ValueError('Invalid argument value for --mode')
 
-def set_output_mode(device, output, mode):
-    device.ctrl_transfer(0xa1, 2, 0x0100, 0x2900, 16)
-    device.ctrl_transfer(0xa1, 2, 0x0100, 0x2900, 50)
-    device.ctrl_transfer(0x40, 10, mode, output, None)
-
 def get_command(command, args):
     if command.lower() == "route":
         return RouteCommand(args)
