@@ -8,6 +8,7 @@ from route import RouteCommand
 from monitor import MonitorCommand
 from inputs import InputCommand
 from powersave import PowersaveCommand
+from read import ReadCommand
 
 VENDOR_ID=0x0644
 PRODUCT_ID = 0x804e
@@ -89,6 +90,8 @@ def get_command(command, args):
         return InputCommand(args)
     elif command.lower() == "powersave":
         return PowersaveCommand(args)
+    elif command.lower() == "read":
+        return ReadCommand(args)
     else:
         raise ValueError('Unknown command')
 
